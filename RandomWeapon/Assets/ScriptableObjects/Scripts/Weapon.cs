@@ -70,16 +70,17 @@ namespace Myspace.Weapon
     [CreateAssetMenu(menuName = "ScriptableObject/Weapon", fileName = "newWeapon")]
     public class Weapon : ScriptableObject
     {
-        [Header("武器の名前")] [SerializeField] string m_name = "";
-        [Header("スキル数")] [SerializeField] MaxAndMin<int> m_skill;
+        public string Name { get; internal set; } = "";
+        // スキルのセットできる数とそれに対する重み
+        public WeightLayer<int> SkillSetValue { get; internal set; } = new WeightLayer<int>();
+        // 耐久値
         [Header("耐久値")] [SerializeField] MaxAndMin<int> m_Endurance;
         [Header("攻撃力")] [SerializeField] MaxAndMin<int> m_AttackPoint;
-        [Header("属性")] [SerializeField] AttributeWeight[] m_attributeWeight = null;
+        [Header("属性")] [SerializeField] WeightLayer<Attribute> m_attributeWeight;
         #region Editor Only
 #if UNITY_EDITOR
         private void Awake()
         {
-            m_skill = new MaxAndMin<int>(0,5);
             m_Endurance = new MaxAndMin<int>(0,1000);
             m_AttackPoint = new MaxAndMin<int>(20, 1000);
         }
@@ -89,11 +90,11 @@ namespace Myspace.Weapon
 
         private void OnValidate()
         {
-            m_skill.Format();
             m_Endurance.Format();
             m_AttackPoint.Format();
         }
     }
+
 
     public enum SkillMode
     {
@@ -101,29 +102,29 @@ namespace Myspace.Weapon
         Multiply,
     }
 
-
-    [Serializable]
-    public class AttributeWeight
-    {
-        [Header("属性")][SerializeField] Attribute m_attribute;
-        [Header("属性の重み")][Range(1,100)] [SerializeField] int m_weight;
-        [Header("属性の値")][SerializeField] MaxAndMin<int> m_attributeValue;
-
-        AttributeWeight()
-        {
-            m_attribute = null;
-            m_weight = 1;
-            m_attributeValue = new MaxAndMin<int>(20, 500);
-        }
-
-        public int Weight { get => m_weight; }
-        public Attribute Attribute { get => m_attribute; }
-        public MaxAndMin<int> AttributeValue { get => m_attributeValue; set => m_attributeValue = value; }
-    }
-
     [Serializable]
     public class SkillAction
     {
         
     }
+
+    [Serializable]
+    public class WeightLayer<T>
+    {
+        internal Dictionary<T, float> ParametersAndRate {get; set; } = new Dictionary<T, float>();
+
+        public float GetRate(T parameter)
+        {
+            if (ParametersAndRate.ContainsKey(parameter))
+            {
+                return ParametersAndRate[parameter];
+            }
+            else
+            {
+                Debug.Log("parameter is not found");
+                return 0;
+            }
+        }
+    }
+
 }
