@@ -63,25 +63,70 @@ public class PlayerStatusScriptableObjectEditor : Editor
     {
         base.OnInspectorGUI();
 
-        m_test = GUILayout.Toggle(m_test, "Test");
+        m_test = EditorGUILayout.BeginToggleGroup("Test", m_test);
 
-        if (m_test)
+        m_level = EditorGUILayout.IntField(m_level);
+        if (m_level <= 0)
+            m_level = 1;
+        else if (m_level > 100)
+            m_level = 100;
+
+        m_level = (int)GUILayout.HorizontalSlider(m_level, 1, 100);
+
+        GUILayout.Space(7);
+
+        EditorGUILayout.BeginVertical();
+        EditorGUILayout.LabelField("Hp       : " + m_instance.m_hpCurve.Evaluate(m_level));
+        EditorGUILayout.LabelField("Attack   : " + m_instance.m_atttackCurve.Evaluate(m_level));
+        EditorGUILayout.LabelField("Diffence : " + m_instance.m_diffenceCurve.Evaluate(m_level));
+        EditorGUILayout.LabelField("Speed    : " + m_instance.m_speedCurve.Evaluate(m_level));
+        EditorGUILayout.LabelField("EXP      : " + m_instance.m_EXPCurve.Evaluate(m_level));
+        EditorGUILayout.EndVertical();
+
+        EditorGUILayout.EndToggleGroup();
+
+
+        m_instance.m_atttackCurve = EditorGUILayout.CurveField(m_instance.m_atttackCurve);
+
+        if (GUILayout.Button("Go"))
         {
-            m_level = EditorGUILayout.IntField(m_level);
-            if (m_level <= 0)
-                m_level = 1;
-            else if (m_level > 100)
-                m_level = 100;
-
-
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("Hp       : " + m_instance.m_hpCurve.Evaluate(m_level));
-            EditorGUILayout.LabelField("Attack   : " + m_instance.m_hpCurve.Evaluate(m_level));
-            EditorGUILayout.LabelField("Diffence : " + m_instance.m_hpCurve.Evaluate(m_level));
-            EditorGUILayout.LabelField("Speed    : " + m_instance.m_hpCurve.Evaluate(m_level));
-            EditorGUILayout.LabelField("EXP      : " + m_instance.m_hpCurve.Evaluate(m_level));
-            EditorGUILayout.EndVertical();
+            m_instance.m_atttackCurve = m_instance.m_atttackCurve.Format(0, 100);
         }
+    }
+
+    
+}
+public static partial class EX
+{
+    public static AnimationCurve Format(this AnimationCurve curve, float min, float max)
+    {
+        if(curve == null)
+        {
+            Debug.LogError("curve is null");
+        }
+
+
+        Keyframe[] keyframes = curve.keys;
+        
+        for(int i = 0;i< (keyframes.Length -1); i++)
+        {
+            if (keyframes[i].value < min)
+            {
+                if (keyframes[i].outTangent < 0)
+                {
+                    keyframes[i].outTangent = 0;
+                }
+                if (keyframes[i + 1].value < min)
+                {
+                    if (keyframes[i + 1].inTangent > 0)
+                        keyframes[i + 1].inWeight = 0;
+                }
+                keyframes[i].value = min;
+            }
+            
+        }
+        return curve = new AnimationCurve(keyframes);
+
     }
 }
 
