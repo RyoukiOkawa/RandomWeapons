@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 namespace Myspace
 {
@@ -71,12 +73,17 @@ namespace Myspace.Weapon
     public class Weapon : ScriptableObject
     {
         public string Name { get; internal set; } = "";
-        // スキルのセットできる数とそれに対する重み
-        public WeightLayer<int> SkillSetValue { get; internal set; } = new WeightLayer<int>();
+        public Texture2D Image { get; internal set; } = null;
+
+        
         // 耐久値
         [Header("耐久値")] [SerializeField] MaxAndMin<int> m_Endurance;
         [Header("攻撃力")] [SerializeField] MaxAndMin<int> m_AttackPoint;
-        [Header("属性")] [SerializeField] WeightLayer<Attribute> m_attributeWeight;
+        public WeightLayer<Element> ElementWeight { get; internal set; } = new WeightLayer<Element>();
+
+        // スキルのセットできる数とそれに対する重み
+        public WeightLayer<int> SkillWeight { get; internal set; } = new WeightLayer<int>();
+
         #region Editor Only
 #if UNITY_EDITOR
         private void Awake()
@@ -108,7 +115,6 @@ namespace Myspace.Weapon
         
     }
 
-    [Serializable]
     public class WeightLayer<T>
     {
         internal Dictionary<T, float> ParametersAndRate {get; set; } = new Dictionary<T, float>();
@@ -125,6 +131,100 @@ namespace Myspace.Weapon
                 return 0;
             }
         }
-    }
 
+        public bool TryGetNameAndWeight(out string[] names,float[] weights)
+        {
+            var count = ParametersAndRate.Count;
+
+            names = new string[count];
+            weights = new float[count];
+
+            if(count != 0)
+            {
+                names = ParametersAndRate.Keys
+                    .Select(name => name.ToString())
+                    .ToArray();
+
+                ParametersAndRate.Values.CopyTo(weights, 0);
+
+                return true;
+            }
+            return false;
+        }
+
+    }
+    public class WeightCurveLayer
+    {
+        [SerializeField]
+        WeightMode m_Mode = WeightMode.Int;
+
+
+    }
+    enum WeightMode
+    {
+        Int,
+        Single
+    }
 }
+
+#region Editor Only WeaponEditor
+
+#if UNITY_EDITOR
+
+namespace Myspace.Editor
+{
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEditor;
+    using Myspace.Weapon;
+
+    [CustomEditor(typeof(Weapon))]
+    internal class WeaponEditor : MyCustomEditor
+    {
+        WeightLayerChanger elementChager = new WeightLayerChanger();
+        WeightLayerChanger SkillChager = new WeightLayerChanger();
+
+        private void OnEnable()
+        {
+
+        }
+
+
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            var instance = target as Weapon;
+
+            GUILayout.BeginHorizontal();
+            GUILayout.BeginVertical();
+            GUILayout.Label("武器の名前");
+            instance.Name = GUILayout.TextField(instance.Name);
+            GUILayout.EndVertical();
+            GUILayout.BeginVertical();
+            instance.Image = EditorGUILayout.ObjectField("武器画像", instance.Image, typeof(Texture2D), true,GUILayout.Height(100)) as Texture2D;
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+
+
+            
+
+            
+
+            var skillValue = instance.SkillWeight.ParametersAndRate;
+
+            //var s = EditorGUILayout.ObjectField("説明文", new Object(), typeof(ScriptableObject), true) as ScriptableObject;
+
+            var skillCnt = skillValue.Count;
+
+            WeightLayerGUIObject("属性のウェイト", instance.ElementWeight, elementChager);
+
+            WeightLayerGUIInt("スキル数", instance.SkillWeight, SkillChager);
+
+        }
+    }
+}
+
+#endif
+
+#endregion
