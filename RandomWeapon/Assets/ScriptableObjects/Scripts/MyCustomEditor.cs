@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 namespace Myspace.Editor
 {
     using System.Collections;
@@ -8,7 +10,7 @@ namespace Myspace.Editor
 
     public abstract class MyCustomEditor : Editor
     {
-        public static void WeightLayerGUIObject<T>(string name, WeightLayer<T> layer, WeightLayerChanger changer) where T : UnityEngine.Object
+        public static WeightLayerList<T> WeightLayerGUIObject<T>(string name, WeightLayerList<T> layer, WeightLayerChanger changer) where T : UnityEngine.Object
         {
             GUILayout.BeginVertical();
             changer.Open = EditorGUILayout.Foldout(changer.Open, name);
@@ -16,7 +18,7 @@ namespace Myspace.Editor
             if (changer.Open)
             {
 
-                Dictionary<T, float> pairs = layer.ParametersAndRate;
+                Dictionary<T, float> pairs = layer;
                 var count = pairs.Count;
 
                 T[] keys = new T[count];
@@ -172,13 +174,19 @@ namespace Myspace.Editor
                     GUILayout.EndVertical();
                 }
 
+
                 #endregion
+
+
+                layer = pairs;
             }
 
             GUILayout.EndVertical();
+
+            return layer;
         }
 
-        public static void WeightLayerGUIInt(string name, WeightLayer<int> layer, WeightLayerChanger changer)
+        public static WeightLayerList<int> WeightLayerGUIInt(string name, WeightLayerList<int> layer, WeightLayerChanger changer)
         {
             GUILayout.BeginVertical();
 
@@ -187,7 +195,7 @@ namespace Myspace.Editor
             if (changer.Open)
             {
 
-                Dictionary<int, float> pairs = layer.ParametersAndRate;
+                Dictionary<int, float> pairs = layer;
                 var count = pairs.Count;
 
                 int[] keys = new int[count];
@@ -389,17 +397,22 @@ namespace Myspace.Editor
                 }
 
                 #endregion
+
+                layer = pairs;
             }
 
             GUILayout.EndVertical();
+
+            return layer;
         }
 
         public class WeightLayerChanger
         {
             public int AddCnt = 0;
             public bool Active { get; set; } = false;
-            public bool Open { get; set; } = false;
+            public bool Open { get; set; } = true;
             public AnimationCurve Curve { get; set; } = AnimationCurve.Linear(0, 1, 1, 0);
         }
     }
 }
+#endif
