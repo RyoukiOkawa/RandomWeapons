@@ -1,0 +1,221 @@
+Using pre-set license
+Built from '2020.3/staging' branch; Version is '2020.3.0f1 (c7b5465681fb) revision 13088070'; Using compiler version '192528614'; Build Type 'Release'
+OS: 'Windows 10 Home; OS build 19042.906; Version 2009; 64bit' Language: 'ja' Physical Memory: 32682 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+ COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\2020.3.0f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+D:/Github/RandomWeaapon/RandomWeapon
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+59994
+Successfully changed project path to: D:/Github/RandomWeaapon/RandomWeapon
+D:/Github/RandomWeaapon/RandomWeapon
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 40.84 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2020.3.0f1 (c7b5465681fb)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/2020.3.0f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/Github/RandomWeaapon/RandomWeapon/Assets
+GfxDevice: creating device client; threaded=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1660 SUPER (ID=0x21c4)
+    Vendor:   
+    VRAM:     5991 MB
+    Driver:   27.21.14.6192
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/2020.3.0f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/2020.3.0f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = 'C:/Program Files/Unity/2020.3.0f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56132
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/2020.3.0f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: C:/Program Files/Unity/2020.3.0f1/Editor/Data/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+Register platform support module: C:/Program Files/Unity/2020.3.0f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.003285 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 39.84 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.474 seconds
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.002883 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 55.80 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.946 seconds
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.05 seconds
+Refreshing native plugins compatible for Editor in 0.41 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2678 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 118.5 MB.
+System memory in use after: 118.7 MB.
+
+Unloading 16 unused Assets to reduce memory usage. Loaded Objects now: 3119.
+Total: 2.597800 ms (FindLiveObjects: 0.402100 ms CreateObjectMapping: 0.214600 ms MarkObjects: 1.912300 ms  DeleteObjects: 0.068000 ms)
+
+========================================================================
+Received Import Request.
+  path: Assets/ScriptableObjects/Scripts/PlayerStatusScriptableObject.cs
+  artifactKey: Guid(f529756b13af0764580b409f68961c71) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/PlayerStatusScriptableObject.cs using Guid(f529756b13af0764580b409f68961c71) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'aa10b73b2918e87140f1a2c6f4132ad8') in 0.072859 seconds
+  Import took 0.076228 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 8168.215999 seconds.
+  path: Assets/ScriptableObjects/Scripts/Skill.cs
+  artifactKey: Guid(7da206995b5dc544ba2d4a141ca8d6ac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/Skill.cs using Guid(7da206995b5dc544ba2d4a141ca8d6ac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'dc3b1951b3566a6f558f1ca1d09bc50d') in 0.008111 seconds
+  Import took 0.011970 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.285727 seconds.
+  path: Assets/ScriptableObjects/Scripts/Skill.cs
+  artifactKey: Guid(7da206995b5dc544ba2d4a141ca8d6ac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/Skill.cs using Guid(7da206995b5dc544ba2d4a141ca8d6ac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'dc3b1951b3566a6f558f1ca1d09bc50d') in 0.003044 seconds
+  Import took 0.006552 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 4595.753697 seconds.
+  path: Assets/ScriptableObjects/Scripts/G-Stick_Human 1.fbx
+  artifactKey: Guid(4a78ad39b009bf4419781159e37c640e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/G-Stick_Human 1.fbx using Guid(4a78ad39b009bf4419781159e37c640e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4e291bec02dccac10e4658c69640451a') in 0.577640 seconds
+  Import took 0.583450 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 41.153451 seconds.
+  path: Assets/ScriptableObjects/Scripts/G-Stick_Human 1.fbx
+  artifactKey: Guid(4a78ad39b009bf4419781159e37c640e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/G-Stick_Human 1.fbx using Guid(4a78ad39b009bf4419781159e37c640e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b70ff1049d3ca321f9d427f12cfe7f93') in 0.117632 seconds
+  Import took 0.122613 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 231.782129 seconds.
+  path: Assets/ScriptableObjects/Scripts/G-Stick_Human 1.fbx
+  artifactKey: Guid(4a78ad39b009bf4419781159e37c640e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/G-Stick_Human 1.fbx using Guid(4a78ad39b009bf4419781159e37c640e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '22202ef47388921129e0fb91741af697') in 0.183656 seconds
+  Import took 0.188609 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 158.597889 seconds.
+  path: Assets/ScriptableObjects/Scripts/Human.fbx
+  artifactKey: Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/Human.fbx using Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4c271262a67bfec01307d3b62ca4f719') in 0.041447 seconds
+  Import took 0.045780 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 30.000930 seconds.
+  path: Assets/ScriptableObjects/Scripts/Human.fbx
+  artifactKey: Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/Human.fbx using Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bfaa24fbc6964eceaf609e4b7018faa8') in 0.044702 seconds
+  Import took 0.049501 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 6.636234 seconds.
+  path: Assets/ScriptableObjects/Scripts/Human.fbx
+  artifactKey: Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/Human.fbx using Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '11bed79a7c1918e4c765a280a9aca2e1') in 0.043144 seconds
+  Import took 0.047185 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 411.145357 seconds.
+  path: Assets/ScriptableObjects/Scripts/Human.fbx
+  artifactKey: Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/Human.fbx using Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'aa2856b2f61b192d0c208e13825bba08') in 0.054286 seconds
+  Import took 0.058839 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 162.681191 seconds.
+  path: Assets/ScriptableObjects/Scripts/Human.fbx
+  artifactKey: Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/Human.fbx using Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5a3315f03403bf8ae653139e1fb1d54d') in 0.030539 seconds
+  Import took 0.034819 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 75.767348 seconds.
+  path: Assets/ScriptableObjects/Scripts/Human.fbx
+  artifactKey: Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/Human.fbx using Guid(ad184e85d6cb1da4683aa5ba6fbc5a21) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1df1d2da3db7e2fcca214f01e57f112e') in 0.027031 seconds
+  Import took 0.031537 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 63.535006 seconds.
+  path: Assets/ScriptableObjects/Scripts/Human.controller
+  artifactKey: Guid(d78af3f64b8230b439ed23d8e13f939d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/Human.controller using Guid(d78af3f64b8230b439ed23d8e13f939d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fae43a44aeca503751f39cbb7fcba310') in 0.008534 seconds
+  Import took 0.013341 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002863 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.40 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.851 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.40 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2618 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 132.0 MB.
+System memory in use after: 132.2 MB.
+
+Unloading 10 unused Assets to reduce memory usage. Loaded Objects now: 3166.
+Total: 1.973300 ms (FindLiveObjects: 0.313300 ms CreateObjectMapping: 0.119200 ms MarkObjects: 1.487000 ms  DeleteObjects: 0.052400 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 137.354482 seconds.
+  path: Assets/ScriptableObjects/Scripts/G-Stick_Human 1.fbx
+  artifactKey: Guid(4a78ad39b009bf4419781159e37c640e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ScriptableObjects/Scripts/G-Stick_Human 1.fbx using Guid(4a78ad39b009bf4419781159e37c640e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '215ea97680341741fa33048cc7952362') in 0.221807 seconds
+  Import took 0.226631 seconds .
+
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file

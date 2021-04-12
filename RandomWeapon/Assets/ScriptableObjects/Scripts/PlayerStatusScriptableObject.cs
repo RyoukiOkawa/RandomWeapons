@@ -29,7 +29,7 @@ public class PlayerStatusScriptableObject : ScriptableObject
     //    }
 }
 
-
+[Serializable]
 public struct CharacterStatus
 {
     public int hp;
@@ -37,6 +37,34 @@ public struct CharacterStatus
     public int diffence;
     public int speed;
     public int EXP;
+
+
+    public static CharacterStatus operator +(CharacterStatus a,CharacterStatus b)
+    {
+        var c = new CharacterStatus()
+        {
+            hp = a.hp + b.hp,
+            attack = a.attack + b.attack,
+            diffence = a.diffence + b.diffence,
+            speed = a.speed + b.speed,
+            EXP = a.EXP + b.EXP
+        };
+
+        return c;
+    }
+    public static CharacterStatus operator -(CharacterStatus a, CharacterStatus b)
+    {
+        var c = new CharacterStatus()
+        {
+            hp = a.hp - b.hp,
+            attack = a.attack - b.attack,
+            diffence = a.diffence - b.diffence,
+            speed = a.speed - b.speed,
+            EXP = a.EXP - b.EXP
+        };
+
+        return c;
+    }
 }
 
 #if UNITY_EDITOR
