@@ -329,6 +329,8 @@ namespace Myspace.Editor
 
             GUILayout.EndHorizontal();
 
+            //EditorGUILayout.PropertyField(serializedObject.FindProperty("m_killWeight"));
+
 
             //var s = EditorGUILayout.ObjectField("説明文", new Object(), typeof(ScriptableObject), true) as ScriptableObject;
 
@@ -336,18 +338,23 @@ namespace Myspace.Editor
 
             instance.ElementWeight = WeightLayerGUIObject("属性のウェイト", instance.ElementWeight, elementChager);
 
-            instance.SkillWeight = WeightLayerGUIInt("スキル数", instance.SkillWeight, SkillChager,0,5);
+            instance.SkillWeight = WeightLayerGUIInt("スキル数", instance.SkillWeight, SkillChager, 0, 5);
 
-            
+
+            var ele =serializedObject.FindProperty("m_elementWeight");
+
+            EditorGUILayout.PropertyField(ele);
+
+
 
             GUILayout.Space(20);
 
-            if (GUILayout.Button("Save Asset"))
-            {
-                serializedObject.ApplyModifiedProperties();
-                EditorUtility.SetDirty(instance);
-                AssetDatabase.SaveAssets();
-            }
+            //if (GUILayout.Button("Save Asset"))
+            //{
+            //    serializedObject.ApplyModifiedProperties();
+            //    EditorUtility.SetDirty(instance);
+            //    AssetDatabase.SaveAssets();
+            //}
         }
     }
 

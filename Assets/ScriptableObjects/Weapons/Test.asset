@@ -16,12 +16,12 @@ MonoBehaviour:
   m_image: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
   m_elementWeight:
     m_weightLayers:
-    - m_parameter: {fileID: 11400000, guid: 18d237d41fceb504689631a3e60fd652, type: 2}
-      m_rate: 88.5
     - m_parameter: {fileID: 11400000, guid: d948a4072c7d6b94e992f3540f58cfc0, type: 2}
       m_rate: 8.6
     - m_parameter: {fileID: 11400000, guid: a191f783cfd79b141b053e6a2b7c502d, type: 2}
       m_rate: 2.8999999
+    - m_parameter: {fileID: 11400000, guid: 18d237d41fceb504689631a3e60fd652, type: 2}
+      m_rate: 88.5
   m_killWeight:
     m_weightLayers:
     - m_parameter: 1
