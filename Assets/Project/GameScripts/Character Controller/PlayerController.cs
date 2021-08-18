@@ -123,6 +123,7 @@ namespace RandomWeapons.Character
         private void OperationCharacter()
         {
             WeaponChange();
+            Attack();
             MoveCharcter();
         }
 
@@ -210,6 +211,24 @@ namespace RandomWeapons.Character
                 Actioning = false
             };
 
+            if (GetInputSpecialAttack())
+            {
+                if (GetStateNextAttack())
+                {
+                    SetAnimatorParametor(2);
+                    result.Actioning = true;
+                }
+            }
+            else if (GetInputNormalAttack())
+            {
+                if (GetStateNextAttack())
+                {
+                    SetAnimatorParametor(1);
+                    result.Actioning = true;
+                }
+            }
+
+
             return result;
 
             #region local methods
@@ -228,6 +247,25 @@ namespace RandomWeapons.Character
                 return result;
             }
 
+            bool GetStateNextAttack()
+            {
+                var attack = MyStateMachineBehaviour.GetCurrentStateMachine(m_currentWeaponLayer,m_attackStates);
+
+                if(attack == null)
+                {
+                    return true;
+                }
+
+                var result =  attack.GetStateAttack();
+
+                return result;
+            }
+            void SetAnimatorParametor(int AttackType)
+            {
+                m_animator.SetTrigger("AttackTrigger");
+                m_animator.SetInteger("AttackType", AttackType);
+            }
+
             #endregion
         }
 
@@ -238,14 +276,29 @@ namespace RandomWeapons.Character
                 Actioning = false
             };
 
-            var input = GetInput();
-            ChangeForce(input.inputValue);
-            ChangeAnimatorParametor(input.inputValue);
+            if (IsMoveing())
+            {
+                var input = GetInput();
 
+                ChangeAngle(input.inputValue);
+                ChangeForce(input.inputValue);
+                ChangeAnimatorParametor(input.inputValue);
+
+                methodsActions.Actioning = true;
+            }
             return methodsActions;
 
 
             #region local methods
+
+            bool IsMoveing()
+            {
+                var transitionInfo = m_animator.GetCurrentAnimatorStateInfo(m_currentWeaponLayer);
+
+                var result = transitionInfo.IsName("BaseStanceTree");
+
+                return result;
+            }
 
             (bool inputing,Vector2 inputValue) GetInput()
             {
@@ -261,8 +314,43 @@ namespace RandomWeapons.Character
 
                 return result;
             }
+
+            void ChangeAngle(Vector2 input)
+            {
+                var cameraTransform = Camera.main.transform;
+                var cameraAngleY = cameraTransform.localEulerAngles.y;
+
+
+                var angles = transform.localEulerAngles;
+                var inputAngle = GetAngle(input);
+
+
+                var resultAngles = angles;
+                resultAngles.y = cameraAngleY + inputAngle;
+
+                transform.localEulerAngles = resultAngles; 
+
+
+                float GetAngle(Vector2 values)
+                {
+                    var tan = Mathf.Atan2(values.x, values.y);
+                    var angle = tan * Mathf.Rad2Deg;
+
+                    return angle;
+                }
+            }
+
             void ChangeForce(Vector2 inpuValue)
             {
+                var velocity = m_rigidbody.velocity;
+                var velocityY = velocity.y;
+
+                float MoveSpeed = 3;
+
+                velocity = transform.forward * MoveSpeed * inpuValue.sqrMagnitude;
+                velocity.y = velocityY;
+
+                m_rigidbody.velocity = velocity;
 
             }
             void ChangeAnimatorParametor(Vector2 inputValue)

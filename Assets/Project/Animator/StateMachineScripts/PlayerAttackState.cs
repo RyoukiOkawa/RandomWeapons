@@ -25,7 +25,7 @@ namespace RandomWeapons.Animations
 
     public class NormalizedTimeState : IAttackState
     {
-        [SerializeField] float m_normalizedTime = 0;
+        [SerializeField][Range(0,1)] float m_normalizedTime = 0;
         public bool StateAttack(PlayerAttackState state)
         {
             var info = state.StateInfo;
