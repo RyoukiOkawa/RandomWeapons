@@ -220,13 +220,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be27c919465bafd4da3cbdd42be37871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_target: {fileID: 1381872716}
-  m_targetOffset: {x: 0, y: 0, z: 0}
-  m_lenght: 0
-  m_rotateSpeed: 3.16
+  m_target: {fileID: 0}
+  m_targetOffset: {x: 0, y: 1.8, z: 0}
+  m_lenght: 5
+  m_rotateSpeedX: 100
+  m_rotateSpeedY: 200
   m_currentAngles: {x: 0, y: 0}
+  m_mirrorX: 0
+  m_mirrorY: 0
   m_maxAngleX: 90
-  m_minAngleX: -90
+  m_minAngleX: -75
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -606,11 +609,6 @@ MonoBehaviour:
   m_DefaultActionMap: PlayerActions
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!4 &1381872716 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 64ab17968ad702746b0c90d5fef998db, type: 3}
-  m_PrefabInstance: {fileID: 1588738056}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1381872717
 MonoBehaviour:
   m_ObjectHideFlags: 0

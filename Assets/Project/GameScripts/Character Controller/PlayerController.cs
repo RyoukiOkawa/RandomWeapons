@@ -280,7 +280,10 @@ namespace RandomWeapons.Character
             {
                 var input = GetInput();
 
-                ChangeAngle(input.inputValue);
+                if (input.inputing)
+                {
+                    ChangeAngle(input.inputValue);
+                }
                 ChangeForce(input.inputValue);
                 ChangeAnimatorParametor(input.inputValue);
 
@@ -307,7 +310,7 @@ namespace RandomWeapons.Character
                         false,
                         Move.ReadValue<Vector2>()
                     );
-                if(result.inputValue.sqrMagnitude > 1)
+                if(result.inputValue.sqrMagnitude > 0)
                 {
                     result.inputing = true;
                 }
