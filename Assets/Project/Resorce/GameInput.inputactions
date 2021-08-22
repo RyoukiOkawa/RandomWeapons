@@ -419,7 +419,7 @@
                     "id": "7a7b63f7-675e-4582-8a5b-d6b8dd134443",
                     "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "ScaleVector2,StickDeadzone",
+                    "processors": "",
                     "groups": "KeybordMouse;All",
                     "action": "CameraMove",
                     "isComposite": false,
