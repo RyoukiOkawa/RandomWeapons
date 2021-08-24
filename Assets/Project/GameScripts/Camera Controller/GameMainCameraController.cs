@@ -76,6 +76,9 @@ public class GameMainCameraController : MonoBehaviour
         }
     }
 
+    public Vector3 CameraTargetPosition
+        => m_target.position + m_targetOffset;
+
     #endregion
 
 
@@ -210,7 +213,7 @@ public class GameMainCameraController : MonoBehaviour
         {
             var back = (transform.forward * -1);
             var targetDistance = back * m_targetToDistance;
-            var targetPosition = m_target.transform.position + m_targetOffset;
+            var targetPosition = CameraTargetPosition;
 
             var result = targetPosition + targetDistance;
 
@@ -223,89 +226,144 @@ public class GameMainCameraController : MonoBehaviour
             {
                 return GetNextPosition();
             }
-            var avoidCollisionsLength = m_avoidCollisionTags.Length;
 
+            var hits = GetAvoidingRayCastHits();
+            var targetToDistance = GetMinAvoidingDistance(hits);
+
+            var targetPosition = CameraTargetPosition;
             var back = (transform.forward * -1);
-            var right = transform.right;
-            var up = transform.up;
+            var targetDistance = back * targetToDistance;
+            var result = targetPosition + targetDistance;
 
-            var targetPosition = m_target.transform.position + m_targetOffset;
-            var targetToDistance = m_targetToDistance;
+            return result;
 
-            var ray = new Ray(
-                origin: Vector3.zero,
-                direction: back
-                );
-            var rayDistance = m_targetToDistance + m_cameraCollisionScale;
+            #region local local methods
 
-            for (int i = -1;i <= 1; i++)
+            // ターゲットとカメラの間にある、よける障害物との接触を全取得
+            RaycastHit[] GetAvoidingRayCastHits()
             {
-                var rayWidthOffset = right * i * m_cameraCollisionScale;
-                var rayWidthPosition = targetPosition + rayWidthOffset;
+                var resultList = new List<RaycastHit>(32);
+                var avoidCollisionsLength = m_avoidCollisionTags.Length;
 
-                for (int j = -1; j <= 1; j++)
+                var back = (transform.forward * -1);
+                var right = transform.right;
+                var up = transform.up;
+
+                var targetPosition = CameraTargetPosition;
+
+
+                var ray = new Ray(
+                    origin: Vector3.zero,
+                    direction: back
+                    );
+
+                var rayDistance = m_targetToDistance + m_cameraCollisionScale;
+
+                for (int i = -1; i <= 1; i++)
                 {
-                    var rayHeightOffset = up * j * m_cameraCollisionScale;
-                    var rayPosition = rayWidthPosition + rayHeightOffset;
-                    ray.origin = rayPosition;
+                    var rayWidthOffset = right * i * m_cameraCollisionScale;
+                    var rayWidthPosition = targetPosition + rayWidthOffset;
 
-                    var hits = Physics.RaycastAll(ray, rayDistance);
-                    if(hits == null)
+                    for (int j = -1; j <= 1; j++)
                     {
-                        continue;
-                    }
+                        var rayHeightOffset = up * j * m_cameraCollisionScale;
+                        var rayPosition = rayWidthPosition + rayHeightOffset;
+                        ray.origin = rayPosition;
 
-                    var hitsLenght = hits.Length;
-                    for(int k = 0;k < hitsLenght; k++)
-                    {
-                        var hit = hits[k];
-                        for (int l = 0; l < avoidCollisionsLength; l++)
+                        var hits = Physics.RaycastAll(ray, rayDistance);
+                        if (hits == null)
                         {
-                            var tag = m_avoidCollisionTags[l];
-                            if (hit.collider.CompareTag(tag))
+                            continue;
+                        }
+
+                        
+                        var hitsLenght = hits.Length;
+                        for (int k = 0; k < hitsLenght; k++)
+                        {
+                            var hit = hits[k];
+                            for (int l = 0; l < avoidCollisionsLength; l++)
                             {
-                                var distance = hit.distance - m_cameraCollisionScale;
-                                if (targetToDistance > distance)
+                                var tag = m_avoidCollisionTags[l];
+                                if (hit.collider.CompareTag(tag))
                                 {
-                                    targetToDistance = distance;
+                                    resultList.Add(hit);
                                 }
                             }
                         }
                     }
                 }
+
+                return resultList.ToArray();
             }
 
-            var targetDistance = back * targetToDistance;
-            
+            // （カメラの当たり判定の大きさを除いた）いちばんターゲットから近い距離を取得
+            float GetMinAvoidingDistance(RaycastHit[] hits)
+            {
+                var targetToDistance = m_targetToDistance;
 
-            var result = targetPosition + targetDistance;
+                var hitsLenght = hits.Length;
+                for (int k = 0; k < hitsLenght; k++)
+                {
+                    var hit = hits[k];
 
-            return result;
+                    var distance = hit.distance;
+                    if (targetToDistance > distance)
+                    {
+                        targetToDistance = distance;
+
+                    }
+                }
+
+                targetToDistance -= m_cameraCollisionScale;
+                return targetToDistance;
+            }
+
+            #endregion
         }
 
         Vector3 GetClampDistancePosition(Vector3 nextPosition)
         {
-            var targetPosition = m_target.transform.position + m_targetOffset;
+            var targetPosition = CameraTargetPosition;
             var currentPosition = transform.position;
 
             var nextDistance = nextPosition - targetPosition;
             var currentDistance = currentPosition - targetPosition;
 
-            var nextDistanceLenght = nextDistance.magnitude;
-            var currentDistanceLenght = currentDistance.magnitude;
+            var nextSqrDistanceLenght = nextDistance.sqrMagnitude;
+            var currentSqrDistanceLenght = currentDistance.sqrMagnitude;
 
-            var distanceDistanceLenght = Mathf.Abs(nextDistanceLenght - currentDistanceLenght);
 
             var result = nextPosition;
             var clampValueDelta = m_clampValue * Time.deltaTime;
+            
 
-            if (distanceDistanceLenght > clampValueDelta)
+            if (nextSqrDistanceLenght > currentSqrDistanceLenght)
             {
-                var normalizeNextDistance = nextDistance.normalized;
+                var distanceSqrDistanceLenght = nextSqrDistanceLenght - currentSqrDistanceLenght;
 
-                result -= normalizeNextDistance * (distanceDistanceLenght - clampValueDelta)
-                     * ((nextDistanceLenght - currentDistanceLenght) > 0 ? 1 :-1);
+                if ( distanceSqrDistanceLenght > clampValueDelta * m_clampValue)
+                {
+                    var distanceDistanceLenght = nextDistance.magnitude - currentDistance.magnitude;
+                    var normalizeNextDistance = nextDistance.normalized;
+                    var clampDistance = normalizeNextDistance * (distanceDistanceLenght - clampValueDelta);
+
+                    result -= clampDistance;
+                }
             }
+            else
+            {
+                var distanceSqrDistanceLenght =  currentSqrDistanceLenght - nextSqrDistanceLenght;
+
+                if (distanceSqrDistanceLenght > clampValueDelta * m_clampValue)
+                {
+                    var distanceDistanceLenght = currentDistance.magnitude - nextDistance.magnitude;
+                    var normalizeNextDistance = nextDistance.normalized;
+                    var clampDistance = normalizeNextDistance * (distanceDistanceLenght - clampValueDelta);
+
+                    result += clampDistance;
+                }
+            }
+            
             return result;
         }
 
