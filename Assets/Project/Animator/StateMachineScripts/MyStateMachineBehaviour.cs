@@ -102,6 +102,15 @@ namespace RandomWeapons.Animations
             return result;
         }
 
+        public static bool TryGetCurrentStateMachine<State>(int layerIndex, State[] states,out State hitState) where State : MyStateMachineBehaviour
+        {
+            hitState = GetCurrentStateMachine(layerIndex, states);
+            bool result = (hitState != null);
+
+            return result;
+        }
+
+
         public static State[] GetCurrentStateMachines<State>(int layerIndex, State[] states) where State : MyStateMachineBehaviour
         {
             List<State> result = new List<State>();
@@ -119,7 +128,15 @@ namespace RandomWeapons.Animations
             return result.ToArray();
         }
 
-        #endregion
+        public static bool TryGetCurrentStateMachines<State>(int layerIndex, State[] states,out State[] hitStates) where State : MyStateMachineBehaviour
+        {
+            hitStates = GetCurrentStateMachines(layerIndex, states);
+            var result = (hitStates != null);
 
-    }
+            return result;
+        }
+
+            #endregion
+
+        }
 }

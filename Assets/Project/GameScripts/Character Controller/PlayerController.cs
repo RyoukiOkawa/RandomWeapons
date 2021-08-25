@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using RandomWeapons.Animations;
+using static RandomWeapons.Animations.MyStateMachineBehaviour;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -19,7 +20,8 @@ namespace RandomWeapons.Character
         private Transform m_transform;
         private GameObject m_gameObject;
 
-
+        [SerializeField, Min(0.01f)] float m_moveSpeeds = 1;
+        [SerializeField, Min(0)] float m_jumpForce = 10;
 
         private PlayerAttackState[] m_attackStates = null;
         private int m_currentWeaponLayer;
@@ -27,15 +29,15 @@ namespace RandomWeapons.Character
 
         #region Input Maps
 
-        private InputAction AttackNormal;
-        private InputAction AttackSpecial;
-        private InputAction Move;
-        private InputAction Jump;
-        private InputAction Weapons1;
-        private InputAction Weapons2;
-        private InputAction Weapons3;
-        private InputAction Weapons4;
-        private InputAction Guard;
+        private InputAction m_attackNormalAction;
+        private InputAction m_attackSpecialAction;
+        private InputAction m_moveAction;
+        private InputAction m_jumpAction;
+        private InputAction m_weapons1Action;
+        private InputAction m_weapons2Action;
+        private InputAction m_weapons3Action;
+        private InputAction m_weapons4Action;
+        private InputAction m_guardAction;
 
         #endregion
 
@@ -53,7 +55,7 @@ namespace RandomWeapons.Character
             if (previewGUI)
             {
                 rect = GetNextLineRect(rect);
-                EditorGUI.Vector2Field(rect, "Move : ", Move.ReadValue<Vector2>());
+                EditorGUI.Vector2Field(rect, "Move : ", m_moveAction.ReadValue<Vector2>());
             }
         }
 
@@ -89,15 +91,15 @@ namespace RandomWeapons.Character
                 var input = GetComponent<PlayerInput>();
                 var map = input.actions;
 
-                AttackNormal = map["AttackNormal"];
-                AttackSpecial = map["AttackSpecial"];
-                Move = map["Move"];
-                Jump = map["Jump"];
-                Weapons1 = map["Weapons1"];
-                Weapons2 = map["Weapons2"];
-                Weapons3 = map["Weapons3"];
-                Weapons4 = map["Weapons4"];
-                Guard = map["Guard"];
+                m_attackNormalAction = map["AttackNormal"];
+                m_attackSpecialAction = map["AttackSpecial"];
+                m_moveAction = map["Move"];
+                m_jumpAction = map["Jump"];
+                m_weapons1Action = map["Weapons1"];
+                m_weapons2Action = map["Weapons2"];
+                m_weapons3Action = map["Weapons3"];
+                m_weapons4Action = map["Weapons4"];
+                m_guardAction = map["Guard"];
             }
             void InitSetAnimators()
             {
@@ -120,10 +122,19 @@ namespace RandomWeapons.Character
             OperationCharacter();
         }
 
+        private void FixedUpdate()
+        {
+            FixedOperationCharacter();
+        }
+
         private void OperationCharacter()
         {
             WeaponChange();
             Attack();
+            Jump();
+        }
+        private void FixedOperationCharacter()
+        {
             MoveCharcter();
         }
 
@@ -165,7 +176,7 @@ namespace RandomWeapons.Character
             }
             bool GetStateChange()
             {
-                var state = MyStateMachineBehaviour.GetCurrentStateMachine(m_currentWeaponLayer, m_attackStates);
+                var state = GetCurrentStateMachine(m_currentWeaponLayer, m_attackStates);
                 if(state is null)
                 {
                     return true;
@@ -178,15 +189,15 @@ namespace RandomWeapons.Character
             (bool push,int pushNumber) InputCheck()
             {
                 (bool push, int pushNumber) result = (true,0);
-                if (Weapons1.triggered)
+                if (m_weapons1Action.triggered)
                 {
                     result.pushNumber = 0;
                 }
-                else if (Weapons2.triggered)
+                else if (m_weapons2Action.triggered)
                 {
                     result.pushNumber = 1;
                 }
-                else if (Weapons3.triggered)
+                else if (m_weapons3Action.triggered)
                 {
                     result.pushNumber = 2;
                 }
@@ -235,28 +246,26 @@ namespace RandomWeapons.Character
 
             bool GetInputNormalAttack()
             {
-                var result = AttackNormal.triggered;
+                var result = m_attackNormalAction.triggered;
 
                 return result;
             }
 
             bool GetInputSpecialAttack()
             {
-                var result = AttackSpecial.triggered;
+                var result = m_attackSpecialAction.triggered;
 
                 return result;
             }
 
             bool GetStateNextAttack()
             {
-                var attack = MyStateMachineBehaviour.GetCurrentStateMachine(m_currentWeaponLayer,m_attackStates);
+                var result = false;
 
-                if(attack == null)
+                if(TryGetCurrentStateMachine(m_currentWeaponLayer,m_attackStates,out var attack))
                 {
-                    return true;
+                    result = attack.GetStateAttack();
                 }
-
-                var result =  attack.GetStateAttack();
 
                 return result;
             }
@@ -308,7 +317,7 @@ namespace RandomWeapons.Character
                 (bool inputing, Vector2 inputValue) result =
                     (
                         false,
-                        Move.ReadValue<Vector2>()
+                        m_moveAction.ReadValue<Vector2>()
                     );
                 if(result.inputValue.sqrMagnitude > 0)
                 {
@@ -324,14 +333,14 @@ namespace RandomWeapons.Character
                 var cameraAngleY = cameraTransform.localEulerAngles.y;
 
 
-                var angles = transform.localEulerAngles;
+                var angles = m_transform.localEulerAngles;
                 var inputAngle = GetAngle(input);
 
 
                 var resultAngles = angles;
                 resultAngles.y = cameraAngleY + inputAngle;
 
-                transform.localEulerAngles = resultAngles; 
+                m_transform.localEulerAngles = resultAngles; 
 
 
                 float GetAngle(Vector2 values)
@@ -348,17 +357,67 @@ namespace RandomWeapons.Character
                 var velocity = m_rigidbody.velocity;
                 var velocityY = velocity.y;
 
-                float MoveSpeed = 3;
+                float MoveSpeed = m_moveSpeeds;
 
-                velocity = transform.forward * MoveSpeed * inpuValue.sqrMagnitude;
+                velocity = m_transform.forward * MoveSpeed * inpuValue.sqrMagnitude;
                 velocity.y = velocityY;
 
                 m_rigidbody.velocity = velocity;
 
             }
+
             void ChangeAnimatorParametor(Vector2 inputValue)
             {
                 m_animator.SetFloat("MoveSpeed", inputValue.sqrMagnitude);
+            }
+
+            #endregion
+        }
+
+        private MethodsActions Jump()
+        {
+            var result = new MethodsActions()
+            {
+                Actioning = false
+            };
+
+            var inputing = GetInput();
+
+            if (inputing && GetJumpingFlag())
+            {
+                SetJumpForce();
+
+                result.Actioning = true;
+            }
+
+            return result;
+
+            #region local methods
+
+            bool GetInput()
+            {
+                var result = m_jumpAction.triggered;
+
+                return result;
+            }
+            bool GetJumpingFlag()
+            {
+                var result = true;
+
+                if (TryGetCurrentStateMachine(m_currentWeaponLayer, m_attackStates,out var attack))
+                {
+                    result = false;
+                }
+
+                return result;
+            }
+
+            void SetJumpForce()
+            {
+                var jumpAngle = m_transform.up;
+                var addForceValue = jumpAngle * m_jumpForce;
+
+                m_rigidbody.AddForce(addForceValue);
             }
 
             #endregion
