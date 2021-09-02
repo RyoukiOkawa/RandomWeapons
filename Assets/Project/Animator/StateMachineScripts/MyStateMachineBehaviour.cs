@@ -80,7 +80,7 @@ namespace RandomWeapons.Animations
         #endregion
 
 
-        #region Static methods
+        #region static methods
 
         public static State GetCurrentStateMachine<State>(int layerIndex, State[] states) where State : MyStateMachineBehaviour
         {
@@ -110,7 +110,6 @@ namespace RandomWeapons.Animations
             return result;
         }
 
-
         public static State[] GetCurrentStateMachines<State>(int layerIndex, State[] states) where State : MyStateMachineBehaviour
         {
             List<State> result = new List<State>();
@@ -136,7 +135,7 @@ namespace RandomWeapons.Animations
             return result;
         }
 
-            #endregion
+        #endregion
 
-        }
+    }
 }

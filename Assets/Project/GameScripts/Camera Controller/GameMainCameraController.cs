@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using RandomWeapons.Director;
 
-public class GameMainCameraController : MonoBehaviour
+public class GameMainCameraController : MonoBehaviour,IMyStarter,IMyUpdater,IUseInput
 {
     [SerializeField] Transform m_target;
     [SerializeField] Vector3 m_targetOffset = Vector3.zero;
@@ -81,11 +82,15 @@ public class GameMainCameraController : MonoBehaviour
 
     #endregion
 
-
-    void Start()
+    void IUseInput.InitInput(PlayerInput input)
     {
-        Init();
+        var actions = input.actions;
+        actions.Enable();
+        CameraMove = actions["CameraMove"];
+    }
 
+    void IMyStarter.MyStart()
+    {
         if (m_target == null)
             return;
 
@@ -93,21 +98,7 @@ public class GameMainCameraController : MonoBehaviour
         ChangePosition();
     }
 
-    private void Init()
-    {
-        InitInputMap();
-
-
-        void InitInputMap()
-        {
-            var playerInput = GetComponent<PlayerInput>();
-            var actions = playerInput.actions;
-
-            CameraMove = actions["CameraMove"];
-        }
-    }
-
-    void Update()
+    void IMyUpdater.MyUpdate()
     {
         CameraOperator();
     }

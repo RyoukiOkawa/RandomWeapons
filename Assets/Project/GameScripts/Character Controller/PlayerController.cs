@@ -2,21 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using RandomWeapons.Director;
 using RandomWeapons.Animations;
 using static RandomWeapons.Animations.MyStateMachineBehaviour;
 
-#if UNITY_EDITOR
-using UnityEditor;
-using RandomWeapons.Editor;
-#endif
 
 namespace RandomWeapons.Character
 {
-    [RequireComponent(typeof(Rigidbody))]
-    public class PlayerController : MonoBehaviour
+    [DisallowMultipleComponent]
+    [AddComponentMenu(menuName: "MyComponet/PlayerController")]
+    [RequireComponent(typeof(MyRigidbody))]
+    public class PlayerController : MonoBehaviour,IMyStarter,IMyUpdater,IMyFixedUpdater,IUseInput
     {
         private Animator m_animator;
-        private Rigidbody m_rigidbody;
+        private MyRigidbody m_rigidbody;
         private Transform m_transform;
         private GameObject m_gameObject;
 
@@ -41,66 +40,30 @@ namespace RandomWeapons.Character
 
         #endregion
 
-        #region GUI
-
-#if UNITY_EDITOR
-
-        bool previewGUI = false;
-
-        private void OnGUI()
+        void IUseInput.InitInput(PlayerInput input)
         {
-            Rect rect = new Rect(0, 0, 200, EditorGUIUtility.singleLineHeight);
+            var map = input.actions;
+            map.Enable();
 
-            previewGUI = GUI.Toggle(rect, previewGUI, "GUI");
-            if (previewGUI)
-            {
-                rect = GetNextLineRect(rect);
-                EditorGUI.Vector2Field(rect, "Move : ", m_moveAction.ReadValue<Vector2>());
-            }
+            m_attackNormalAction = map["AttackNormal"];
+            m_attackSpecialAction = map["AttackSpecial"];
+            m_moveAction = map["Move"];
+            m_jumpAction = map["Jump"];
+            m_weapons1Action = map["Weapons1"];
+            m_weapons2Action = map["Weapons2"];
+            m_weapons3Action = map["Weapons3"];
+            m_weapons4Action = map["Weapons4"];
+            m_guardAction = map["Guard"];
         }
 
-        public Rect GetNextLineRect(Rect rect, float ySpace = 0, float? height = null)
+        void IMyStarter.MyStart()
         {
-            var result = rect;
 
-            result.y += rect.height + ySpace;
-
-            result.height =
-                (height is float hei)
-                ? hei
-                : EditorGUIUtility.singleLineHeight;
-
-            return result;
-        }
-
-#endif
-
-        #endregion
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            InitInputMap();
             InitSetAnimators();
             InitProperty();
 
             #region local methods
 
-            void InitInputMap()
-            {
-                var input = GetComponent<PlayerInput>();
-                var map = input.actions;
-
-                m_attackNormalAction = map["AttackNormal"];
-                m_attackSpecialAction = map["AttackSpecial"];
-                m_moveAction = map["Move"];
-                m_jumpAction = map["Jump"];
-                m_weapons1Action = map["Weapons1"];
-                m_weapons2Action = map["Weapons2"];
-                m_weapons3Action = map["Weapons3"];
-                m_weapons4Action = map["Weapons4"];
-                m_guardAction = map["Guard"];
-            }
             void InitSetAnimators()
             {
                 m_animator = GetComponent<Animator>();
@@ -108,7 +71,7 @@ namespace RandomWeapons.Character
             }
             void InitProperty()
             {
-                m_rigidbody = GetComponent<Rigidbody>();
+                m_rigidbody = GetComponent<MyRigidbody>();
                 m_gameObject = gameObject;
                 m_transform = transform;
             }
@@ -117,12 +80,12 @@ namespace RandomWeapons.Character
         }
 
         // Update is called once per frame
-        void Update()
+        void IMyUpdater.MyUpdate()
         {
             OperationCharacter();
         }
 
-        private void FixedUpdate()
+        void IMyFixedUpdater.MyFixedUpdate()
         {
             FixedOperationCharacter();
         }
@@ -132,6 +95,7 @@ namespace RandomWeapons.Character
             WeaponChange();
             Attack();
             Jump();
+            m_rigidbody.Move(Time.deltaTime);
         }
         private void FixedOperationCharacter()
         {
@@ -247,14 +211,12 @@ namespace RandomWeapons.Character
             bool GetInputNormalAttack()
             {
                 var result = m_attackNormalAction.triggered;
-
                 return result;
             }
 
             bool GetInputSpecialAttack()
             {
                 var result = m_attackSpecialAction.triggered;
-
                 return result;
             }
 
@@ -265,6 +227,10 @@ namespace RandomWeapons.Character
                 if(TryGetCurrentStateMachine(m_currentWeaponLayer,m_attackStates,out var attack))
                 {
                     result = attack.GetStateAttack();
+                }
+                else
+                {
+                    result = true;
                 }
 
                 return result;
@@ -354,7 +320,7 @@ namespace RandomWeapons.Character
 
             void ChangeForce(Vector2 inpuValue)
             {
-                var velocity = m_rigidbody.velocity;
+                var velocity = m_rigidbody.Velocity;
                 var velocityY = velocity.y;
 
                 float MoveSpeed = m_moveSpeeds;
@@ -362,7 +328,7 @@ namespace RandomWeapons.Character
                 velocity = m_transform.forward * MoveSpeed * inpuValue.sqrMagnitude;
                 velocity.y = velocityY;
 
-                m_rigidbody.velocity = velocity;
+                m_rigidbody.Velocity = velocity;
 
             }
 
@@ -404,11 +370,14 @@ namespace RandomWeapons.Character
             {
                 var result = true;
 
-                if (TryGetCurrentStateMachine(m_currentWeaponLayer, m_attackStates,out var attack))
+                if (m_rigidbody.IsGround(out var _) == false)
                 {
                     result = false;
                 }
-
+                else if (TryGetCurrentStateMachine(m_currentWeaponLayer, m_attackStates,out var attack))
+                {
+                    result = false;
+                }
                 return result;
             }
 
@@ -416,6 +385,7 @@ namespace RandomWeapons.Character
             {
                 var jumpAngle = m_transform.up;
                 var addForceValue = jumpAngle * m_jumpForce;
+
 
                 m_rigidbody.AddForce(addForceValue);
             }
